@@ -134,6 +134,7 @@ def verify():
         if dust3r_path not in sys.path:
             sys.path.insert(0, dust3r_path)
 
+        # pyrefly: ignore [missing-import]
         from mast3r.model import AsymmetricMASt3R  # noqa
 
         print("  ✓ MASt3R model import")
