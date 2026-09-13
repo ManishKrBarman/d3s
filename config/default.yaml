@@ -1,0 +1,186 @@
+# ==============================================================
+# D3S Pipeline Configuration
+# ==============================================================
+# All paths, thresholds, and parameters in one place.
+# Override per-run via CLI flags or environment variables.
+# ==============================================================
+
+
+# ----------------------------------------------------------
+# Paths
+# ----------------------------------------------------------
+paths:
+  # Root data directory (contains datasets, videos, etc.)
+  data_root: "data"
+
+  # Where all pipeline outputs are written
+  output_root: "output"
+
+  # MASt3R model checkpoint (auto-downloaded if not present)
+  mast3r_model: "naver/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric"
+
+
+# ----------------------------------------------------------
+# Video Ingestion
+# ----------------------------------------------------------
+video:
+  # Target FPS for frame extraction (null = use original)
+  target_fps: null
+
+  # Maximum resolution (longest edge). Frames are resized
+  # if larger. Set null to keep original.
+  max_resolution: 1920
+
+  # Output format for extracted frames
+  frame_format: "jpg"
+
+  # JPEG quality (1-100)
+  jpeg_quality: 95
+
+
+# ----------------------------------------------------------
+# Keyframe Selection
+# ----------------------------------------------------------
+keyframes:
+  # Strategy: "adaptive" (feature-based) or "uniform" (every N-th frame)
+  strategy: "adaptive"
+
+  # --- Adaptive strategy parameters ---
+  # Minimum sharpness percentile to keep (bottom N% are rejected)
+  min_sharpness_percentile: 20
+
+  # Minimum gap between selected frames
+  min_frame_gap: 3
+
+  # Maximum gap (force-select if exceeded)
+  max_frame_gap: 10
+
+  # ORB feature count for matching
+  n_features: 3000
+
+  # Good match distance threshold
+  match_distance: 50
+
+  # RANSAC parameters
+  ransac_threshold: 1.0
+  ransac_confidence: 0.99
+
+  # Inlier ratio thresholds
+  # High = too similar (redundant), Low = meaningful change
+  high_redundancy: 0.85
+  low_redundancy: 0.70
+
+  # --- Uniform strategy parameters ---
+  # Select every N-th frame
+  uniform_interval: 5
+
+
+# ----------------------------------------------------------
+# Quality Filtering
+# ----------------------------------------------------------
+quality:
+  # Minimum Laplacian variance (sharpness)
+  # Frames below this are always rejected.
+  # Set to null to use percentile-based threshold instead.
+  min_sharpness: null
+
+  # Minimum brightness (0-255)
+  min_brightness: 30
+
+  # Maximum brightness (0-255)
+  max_brightness: 240
+
+  # Minimum contrast (std dev of grayscale)
+  min_contrast: 15
+
+
+# ----------------------------------------------------------
+# MASt3R Reconstruction
+# ----------------------------------------------------------
+reconstruction:
+  # Device: "auto", "cuda", "cpu"
+  # "auto" = use CUDA if available and VRAM >= min_vram_gb
+  device: "auto"
+
+  # Minimum VRAM (GB) to use GPU. Below this, fall back to CPU.
+  min_vram_gb: 3.0
+
+  # Image size for MASt3R inference (must match model training)
+  image_size: 512
+
+  # Scene graph: "complete", "swin-N", "logwin-N", "oneref"
+  # "complete" = all pairs (best quality, slow)
+  # "swin-5" = sliding window of 5 (fast, good for sequential video)
+  scene_graph: "swin-5"
+
+  # Global alignment iterations
+  alignment_iterations: 300
+
+  # Alignment learning rate
+  alignment_lr: 0.01
+
+  # Alignment initialization: "mst" or "known_poses"
+  alignment_init: "mst"
+
+  # Alignment schedule
+  alignment_schedule: "cosine"
+
+  # Confidence threshold percentile for point filtering
+  confidence_threshold_percentile: 20
+
+  # Maximum points to keep (random downsample if exceeded)
+  max_points: 1_000_000
+
+
+# ----------------------------------------------------------
+# Georeferencing
+# ----------------------------------------------------------
+georef:
+  # Enable GPS-based georeferencing
+  enabled: true
+
+  # Coordinate reference system for output
+  # "utm" = auto-detect UTM zone from GPS
+  # "wgs84" = lat/lon/alt
+  output_crs: "utm"
+
+  # Earth radius for local coordinate transforms (meters)
+  earth_radius: 6371000.0
+
+
+# ----------------------------------------------------------
+# Mesh Generation
+# ----------------------------------------------------------
+mesh:
+  # Enable mesh generation from point cloud
+  enabled: true
+
+  # Method: "poisson" or "ball_pivoting"
+  method: "poisson"
+
+  # Poisson reconstruction depth
+  poisson_depth: 9
+
+  # Normal estimation neighbors
+  normal_neighbors: 30
+
+
+# ----------------------------------------------------------
+# Export
+# ----------------------------------------------------------
+export:
+  # Output formats (list)
+  formats:
+    - "ply"
+
+  # Include vertex colors
+  vertex_colors: true
+
+  # Include vertex normals
+  vertex_normals: true
+
+  # Save camera trajectory CSV
+  save_trajectory: true
+
+  # Save per-image statistics
+  save_statistics: true

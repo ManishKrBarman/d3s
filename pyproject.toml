@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "d3s"
+version = "0.1.0"
+description = "Single-Pass Drone Video to 3D Model Generation System"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "opencv-python>=4.8",
+    "open3d>=0.17",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1",
+]
+
+[project.scripts]
+d3s-pipeline = "scripts.run_pipeline:main"
+
+[tool.setuptools.packages.find]
+include = ["d3s*"]
+
+[tool.ruff]
+line-length = 79
+target-version = "py310"
