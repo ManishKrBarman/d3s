@@ -78,6 +78,7 @@ print("✅ Setup complete!")
 # Upload your drone images
 # ==========================================
 
+# pyrefly: ignore [missing-import]
 from google.colab import files
 import shutil
 from pathlib import Path
