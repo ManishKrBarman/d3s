@@ -27,7 +27,35 @@ python scripts/run_pipeline.py --input path/to/images --output output/my_run
 | Setup | GPU | RAM | Speed (83 images) |
 |-------|-----|-----|-------------------|
 | **Recommended** | RTX 4060+ (8GB VRAM) | 16GB | ~15-30 min |
+| **Free Cloud** | Colab T4 (16GB VRAM) | 12GB | ~10-20 min |
 | Minimum | CPU only | 8GB | ~4-8 hours |
+
+## ☁️ Run on Cloud GPU (Free)
+
+No GPU? Use **Google Colab** (free T4 GPU):
+
+1. Open [Google Colab](https://colab.research.google.com/)
+2. Upload `notebooks/colab_runner.py` or copy-paste the cells
+3. Set runtime: **Runtime → Change runtime type → T4 GPU**
+4. Run all cells — it handles setup, image upload, and downloads results
+
+Other cloud options:
+| Platform | Free GPU | VRAM | Link |
+|----------|----------|------|------|
+| **Google Colab** | T4 | 16GB | [colab.research.google.com](https://colab.research.google.com/) |
+| **Kaggle** | P100 / T4 | 16GB | [kaggle.com/code](https://www.kaggle.com/code) |
+| **Lightning.ai** | T4 | 16GB | [lightning.ai](https://lightning.ai/) |
+
+## 📁 Dataset
+
+The AGZ drone dataset is **not included** in the repo (too large). To get it:
+
+1. Download from shared drive: `<ADD_YOUR_LINK_HERE>`
+2. Extract to `AGZ_subset/` in the project root
+3. Run: `python scripts/run_pipeline.py --input AGZ_subset --output output/agz_run`
+
+Or use your own images — just point `--input` to any folder of JPG/PNG images.
+
 
 ## Input Formats
 
